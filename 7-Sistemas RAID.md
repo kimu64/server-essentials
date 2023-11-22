@@ -4,8 +4,40 @@
 > Su finalidad es proteger la información en caso de fallo en un disco o en el caso de los que no proporcionan redundancia, mejorar la velocidad de este.
 > En definitiva, crear un único volumen con varios discos duros funcionando en conjunto, tenemos dos tipos de configuraciones:
 
-**Disk Mirroring**: Un tipo de configuración RAID que _busca redundancia_ de datos ante un posible posible fallo en uno de estos.
-**Disk Stripping**: Esta configuración no busca la redundancia, sino conseguir *mayores velocidades* de transferencia de datos.
+- **Disk Mirroring**: Un tipo de configuración RAID que _busca redundancia_ de datos ante un posible posible fallo en uno de estos.
+- **Disk Stripping**: Esta configuración no busca la redundancia, sino conseguir *mayores velocidades* de transferencia de datos.
+
+# Paridad
+Antes de entrar en el mundo de los RAID, vamos a ver como funciona la paridad en estos, así te harás una idea de cómo se tiene constancia de lo que hay en varios bloques usando uno.
+
+Para la paridad tenemos que irnos al nivel de los bytes, digamos que tenemos tres bytes.
+Queremos que si un byte se pierde, podamos saber qué había en él, para esto vamos a usar otro byte y veremos gráficamente el proceso para que no te me duermas:
+
+Estos serán nuestro tres bytes. ¿Cómo sabremos qué había en uno si lo perdemos?
+### Paridad Impar
+![](img/Pasted%20image%2020231122013945.png)
+
+Primero vamos a contar el número de ceros totales en cada columna:
+![](img/Pasted%20image%2020231122020241.png)
+
+Si el número de ceros es par, lo sustituiremos por un `0`, si es impar podremos un `1`:
+![](img/Pasted%20image%2020231122014337.png)
+
+## Paridad Par
+De igual forma, en la paridad par, si el número total de `0` es par, los sustituiremos por un `1`, si son impares, por un `0`
+
+En este caso, la respuesta sería `10010011`, lo contrarío, obviamente.
+
+## Resumen
+|  | PAR | IMPAR |
+|---|---|---|
+| BYTE 1 | 1001 | 1001 |
+| BYTE 2 | 1101 | 1101 |
+| BYTE 3 | 1000 | 1000 |
+| PARIDAD | 1100 | 0011 |
+
+PAR: Si hay un número **par** de `0` -> 1
+IMPAR : Si hay un número **impar** de `0` -> `
 
 # Cómo funciona
 El sistema RAID permite operaciones de **I/O** en los discos de forma balanceada, por lo que los datos pueden escribirse en varios discos al mismo tiempo, o de forma secuencial para repartir el trabajo.
@@ -13,7 +45,6 @@ En el sistema operativo, el sistema RAID se presenta como una sola unidad lógic
 
 Para que funcione el sistema RAID, es necesaria la presencia de una controladora RAID, estas pueden ser por **software** o **hardware**, las de software suelen venir integradas en las placas bases de ordenadores modernos, algunas placas ya incluyen controladoras por hardware.
 Las controladoras por hardware son más caras pero más rápidas, por esto solo se suelen encontrar en entornos empresariales.
-
 # Posibilidades de configuración
 Existen muchos tipos de configuraciones, cada una ofreciendo una solución, pero nos centraremos en las más populares:
 
